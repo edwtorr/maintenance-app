@@ -1,0 +1,181 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import Button from '@/components/Button';
+import Input from '@/components/Input';
+import Select from '@/components/Select';
+import Textarea from '@/components/Textarea';
+import { ArrowLeft } from 'lucide-react';
+
+const productionLines = [
+  { value: 'L16', label: 'Línea L16' },
+  { value: 'L20', label: 'Línea L20' },
+  { value: 'L33', label: 'Línea L33' },
+];
+
+const severityLevels = [
+  { value: 'low', label: 'Baja - No afecta la producción' },
+  { value: 'medium', label: 'Media - Afecta parcialmente' },
+  { value: 'high', label: 'Alta - Afecta significativamente' },
+  { value: 'critical', label: 'Crítica - Detención total' },
+];
+---
+
+<MainLayout title="Nueva Avería - Gestión de Averías" currentPath="/failures">
+  <div class="max-w-3xl mx-auto">
+    <!-- Header -->
+    <div class="mb-6">
+      <a href="/failures" class="inline-flex items-center gap-2 text-primary-600 dark:text-primary-400 hover:underline mb-4">
+        <ArrowLeft class="w-4 h-4" />
+        Volver a averías
+      </a>
+      <h1 class="text-3xl font-bold text-dark-900 dark:text-dark-50 mb-2">
+        Registrar Nueva Avería
+      </h1>
+      <p class="text-dark-600 dark:text-dark-400">
+        Complete el formulario para reportar una nueva avería
+      </p>
+    </div>
+
+    <!-- Form -->
+    <div class="card p-6">
+      <form id="failure-form" class="space-y-6">
+        <!-- Step 1: Ubicación -->
+        <div>
+          <h2 class="text-xl font-semibold text-dark-900 dark:text-dark-50 mb-4 pb-2 border-b border-light-300 dark:border-dark-700">
+            1. Ubicación de la Avería
+          </h2>
+          <div class="space-y-4">
+            <Select
+              label="Línea de Producción"
+              name="production_line"
+              options={productionLines}
+              placeholder="Selecciona una línea"
+              required
+              client:load
+            />
+
+            <Select
+              label="Máquina"
+              name="machine"
+              options={[
+                { value: 'maquina-1', label: 'Máquina XZ-100' },
+                { value: 'maquina-2', label: 'Máquina AB-250' },
+                { value: 'maquina-3', label: 'Máquina CD-320' },
+              ]}
+              placeholder="Selecciona una máquina"
+              required
+              hint="Selecciona primero una línea de producción"
+              client:load
+            />
+          </div>
+        </div>
+
+        <!-- Step 2: Descripción -->
+        <div>
+          <h2 class="text-xl font-semibold text-dark-900 dark:text-dark-50 mb-4 pb-2 border-b border-light-300 dark:border-dark-700">
+            2. Descripción del Problema
+          </h2>
+          <div class="space-y-4">
+            <Input
+              label="Título de la Avería"
+              name="title"
+              placeholder="Ej: Fallo en motor principal"
+              required
+              fullWidth
+              client:load
+            />
+
+            <Textarea
+              label="Descripción Detallada"
+              name="description"
+              placeholder="Describe el problema con el mayor detalle posible..."
+              rows={6}
+              required
+              fullWidth
+              hint="Incluye síntomas, sonidos anormales, códigos de error, etc."
+              client:load
+            />
+
+            <Select
+              label="Nivel de Urgencia"
+              name="severity"
+              options={severityLevels}
+              placeholder="Selecciona el nivel de urgencia"
+              required
+              client:load
+            />
+          </div>
+        </div>
+
+        <!-- Step 3: Información Adicional -->
+        <div>
+          <h2 class="text-xl font-semibold text-dark-900 dark:text-dark-50 mb-4 pb-2 border-b border-light-300 dark:border-dark-700">
+            3. Información Adicional
+          </h2>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-dark-900 dark:text-dark-50 mb-2">
+                Adjuntar Imágenes/Documentos
+              </label>
+              <div class="border-2 border-dashed border-light-300 dark:border-dark-700 rounded-lg p-8 text-center hover:border-primary-500 dark:hover:border-primary-500 transition-colors cursor-pointer">
+                <input type="file" id="file-upload" multiple class="hidden" />
+                <label for="file-upload" class="cursor-pointer">
+                  <div class="text-dark-600 dark:text-dark-400">
+                    <p class="font-medium mb-1">Arrastra archivos aquí o haz clic para seleccionar</p>
+                    <p class="text-sm">PNG, JPG, PDF (máx. 10MB)</p>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <Textarea
+              label="Acciones Tomadas (Opcional)"
+              name="actions_taken"
+              placeholder="¿Se intentó alguna solución inicial?"
+              rows={3}
+              fullWidth
+              client:load
+            />
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex gap-3 pt-4 border-t border-light-300 dark:border-dark-700">
+          <Button
+            type="button"
+            variant="secondary"
+            onclick="window.location.href='/failures'"
+            client:load
+          >
+            Cancelar
+          </Button>
+          <Button
+            type="submit"
+            variant="primary"
+            client:load
+          >
+            Registrar Avería
+          </Button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    import { useToast } from '@/utils/useToast';
+
+    document.getElementById('failure-form')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      // Aquí iría la lógica para enviar el formulario a la API
+      // Por ahora solo mostramos un mensaje de éxito
+
+      const toast = useToast();
+      toast.success('Avería registrada correctamente');
+
+      setTimeout(() => {
+        window.location.href = '/failures';
+      }, 1500);
+    });
+  </script>
+</MainLayout>

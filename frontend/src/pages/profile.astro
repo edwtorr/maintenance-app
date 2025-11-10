@@ -1,0 +1,199 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import Button from '@/components/Button';
+import Input from '@/components/Input';
+import Select from '@/components/Select';
+import Card, { CardHeader, CardBody } from '@/components/Card';
+import Badge from '@/components/Badge';
+import { User, Mail, Shield, CreditCard, Bell, Moon } from 'lucide-react';
+
+const roles = [
+  { value: 'admin', label: 'Administrador' },
+  { value: 'technician', label: 'Técnico' },
+  { value: 'operator', label: 'Operador' },
+  { value: 'viewer', label: 'Visualizador' },
+];
+
+const subscriptionTiers = [
+  { value: 'free', label: 'Gratuito' },
+  { value: 'basic', label: 'Básico' },
+  { value: 'premium', label: 'Premium' },
+  { value: 'enterprise', label: 'Empresarial' },
+];
+---
+
+<MainLayout title="Perfil y Configuración - Gestión de Averías" currentPath="/profile">
+  <div class="max-w-4xl mx-auto">
+    <div class="mb-6">
+      <h1 class="text-3xl font-bold text-dark-900 dark:text-dark-50 mb-2">
+        Perfil y Configuración
+      </h1>
+      <p class="text-dark-600 dark:text-dark-400">
+        Gestiona tu perfil y preferencias de la aplicación
+      </p>
+    </div>
+
+    <!-- Profile Card -->
+    <Card class="mb-6" client:load>
+      <CardHeader title="Información Personal" client:load />
+      <CardBody client:load>
+        <div class="flex items-start gap-6 mb-6">
+          <div class="flex-shrink-0">
+            <div class="w-24 h-24 rounded-full bg-primary-600 flex items-center justify-center text-white text-3xl font-bold">
+              UD
+            </div>
+            <Button variant="outline" size="sm" fullWidth class="mt-2" client:load>
+              Cambiar
+            </Button>
+          </div>
+          <div class="flex-1 space-y-4">
+            <Input
+              label="Nombre Completo"
+              defaultValue="Usuario Demo"
+              icon={<User class="w-4 h-4" />}
+              fullWidth
+              client:load
+            />
+            <Input
+              label="Correo Electrónico"
+              type="email"
+              defaultValue="demo@maintenance.com"
+              icon={<Mail class="w-4 h-4" />}
+              fullWidth
+              client:load
+            />
+            <Select
+              label="Rol"
+              options={roles}
+              icon={<Shield class="w-4 h-4" />}
+              disabled
+              client:load
+            />
+          </div>
+        </div>
+
+        <div class="flex gap-3 pt-4 border-t border-light-300 dark:border-dark-700">
+          <Button variant="primary" client:load>
+            Guardar Cambios
+          </Button>
+          <Button variant="outline" client:load>
+            Cancelar
+          </Button>
+        </div>
+      </CardBody>
+    </Card>
+
+    <!-- Subscription Card -->
+    <Card class="mb-6" client:load>
+      <CardHeader title="Suscripción" icon={<CreditCard class="w-5 h-5" />} client:load />
+      <CardBody client:load>
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <p class="text-sm text-dark-600 dark:text-dark-400 mb-1">Plan Actual</p>
+            <div class="flex items-center gap-2">
+              <p class="text-2xl font-bold text-dark-900 dark:text-dark-50">Premium</p>
+              <Badge variant="primary" client:load>Activo</Badge>
+            </div>
+            <p class="text-sm text-dark-600 dark:text-dark-400 mt-1">
+              Próxima renovación: 15 de diciembre de 2024
+            </p>
+          </div>
+          <Button variant="primary" client:load>
+            Actualizar Plan
+          </Button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-light-300 dark:border-dark-700">
+          <div class="p-4 rounded-lg bg-light-100 dark:bg-dark-800">
+            <p class="text-sm text-dark-600 dark:text-dark-400 mb-1">Usuarios</p>
+            <p class="text-xl font-bold text-dark-900 dark:text-dark-50">5 / 10</p>
+          </div>
+          <div class="p-4 rounded-lg bg-light-100 dark:bg-dark-800">
+            <p class="text-sm text-dark-600 dark:text-dark-400 mb-1">Almacenamiento</p>
+            <p class="text-xl font-bold text-dark-900 dark:text-dark-50">2.4 GB / 10 GB</p>
+          </div>
+          <div class="p-4 rounded-lg bg-light-100 dark:bg-dark-800">
+            <p class="text-sm text-dark-600 dark:text-dark-400 mb-1">Consultas IA</p>
+            <p class="text-xl font-bold text-dark-900 dark:text-dark-50">1,234 / 5,000</p>
+          </div>
+        </div>
+      </CardBody>
+    </Card>
+
+    <!-- Notifications Settings -->
+    <Card class="mb-6" client:load>
+      <CardHeader title="Notificaciones" icon={<Bell class="w-5 h-5" />} client:load />
+      <CardBody client:load>
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="font-medium text-dark-900 dark:text-dark-50">Nuevas Averías</p>
+              <p class="text-sm text-dark-600 dark:text-dark-400">Recibe notificaciones de nuevas averías reportadas</p>
+            </div>
+            <input type="checkbox" checked class="w-5 h-5 rounded" />
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="font-medium text-dark-900 dark:text-dark-50">Actualizaciones de Estado</p>
+              <p class="text-sm text-dark-600 dark:text-dark-400">Cambios en el estado de averías asignadas</p>
+            </div>
+            <input type="checkbox" checked class="w-5 h-5 rounded" />
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="font-medium text-dark-900 dark:text-dark-50">Reportes Semanales</p>
+              <p class="text-sm text-dark-600 dark:text-dark-400">Resumen semanal de KPIs y métricas</p>
+            </div>
+            <input type="checkbox" class="w-5 h-5 rounded" />
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="font-medium text-dark-900 dark:text-dark-50">Mantenimientos Programados</p>
+              <p class="text-sm text-dark-600 dark:text-dark-400">Recordatorios de mantenimientos preventivos</p>
+            </div>
+            <input type="checkbox" checked class="w-5 h-5 rounded" />
+          </div>
+        </div>
+      </CardBody>
+    </Card>
+
+    <!-- Appearance Settings -->
+    <Card client:load>
+      <CardHeader title="Apariencia" icon={<Moon class="w-5 h-5" />} client:load />
+      <CardBody client:load>
+        <div class="space-y-4">
+          <div>
+            <p class="font-medium text-dark-900 dark:text-dark-50 mb-2">Tema</p>
+            <div class="flex gap-3">
+              <button class="flex-1 p-4 rounded-lg border-2 border-primary-600 bg-primary-50 dark:bg-primary-900/20 text-dark-900 dark:text-dark-50">
+                <p class="font-medium">Claro</p>
+              </button>
+              <button class="flex-1 p-4 rounded-lg border-2 border-light-300 dark:border-dark-700 text-dark-900 dark:text-dark-50">
+                <p class="font-medium">Oscuro</p>
+              </button>
+              <button class="flex-1 p-4 rounded-lg border-2 border-light-300 dark:border-dark-700 text-dark-900 dark:text-dark-50">
+                <p class="font-medium">Sistema</p>
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <p class="font-medium text-dark-900 dark:text-dark-50 mb-2">Idioma</p>
+            <Select
+              options={[
+                { value: 'es', label: 'Español' },
+                { value: 'en', label: 'English' },
+                { value: 'fr', label: 'Français' },
+              ]}
+              fullWidth
+              client:load
+            />
+          </div>
+        </div>
+      </CardBody>
+    </Card>
+  </div>
+</MainLayout>

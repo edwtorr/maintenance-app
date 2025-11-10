@@ -1,0 +1,17 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import AIAssistant from '@/components/AIAssistant';
+---
+
+<MainLayout title="Asistente IA - Gestión de Averías" currentPath="/ai-assistant">
+  <div class="mb-6">
+    <h1 class="text-3xl font-bold text-dark-900 dark:text-dark-50 mb-2">
+      Asistente IA
+    </h1>
+    <p class="text-dark-600 dark:text-dark-400">
+      Obtén ayuda inteligente para diagnosticar y resolver averías
+    </p>
+  </div>
+
+  <AIAssistant client:load />
+</MainLayout>

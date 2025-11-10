@@ -1,0 +1,208 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import KPICard from '@/components/KPICard';
+import Card, { CardHeader, CardBody } from '@/components/Card';
+import { FailureStatusBadge, FailureSeverityBadge } from '@/components/Badge';
+import Button from '@/components/Button';
+import { Clock, AlertCircle, CheckCircle, Activity, Wrench, TrendingUp } from 'lucide-react';
+
+// Datos de ejemplo
+const kpis = {
+  mttr: { value: '2.3h', subtitle: 'Tiempo medio de reparación', trend: 'down' as const, trendValue: '-15%' },
+  mtbf: { value: '45.2h', subtitle: 'Tiempo medio entre fallos', trend: 'up' as const, trendValue: '+8%' },
+  availability: { value: '94.5%', subtitle: 'Disponibilidad total', trend: 'up' as const, trendValue: '+2.1%' },
+  openFailures: { value: '12', subtitle: 'Averías abiertas actualmente', trend: 'down' as const, trendValue: '-3' },
+};
+
+const recentFailures = [
+  {
+    id: 1,
+    title: 'Fallo en motor principal',
+    machine: 'Máquina XZ-100',
+    line: 'L16',
+    status: 'open',
+    severity: 'critical',
+    time: 'Hace 15 min',
+  },
+  {
+    id: 2,
+    title: 'Sensor de temperatura desajustado',
+    machine: 'Máquina AB-250',
+    line: 'L20',
+    status: 'in_progress',
+    severity: 'medium',
+    time: 'Hace 1 hora',
+  },
+  {
+    id: 3,
+    title: 'Fuga hidráulica menor',
+    machine: 'Máquina CD-320',
+    line: 'L33',
+    status: 'in_progress',
+    severity: 'low',
+    time: 'Hace 2 horas',
+  },
+  {
+    id: 4,
+    title: 'Calibración necesaria',
+    machine: 'Máquina EF-450',
+    line: 'L16',
+    status: 'resolved',
+    severity: 'medium',
+    time: 'Hace 3 horas',
+  },
+];
+
+const lineStatus = [
+  { name: 'L16', status: 'warning', availability: '91%', activeFailures: 2, color: 'text-yellow-600 dark:text-yellow-400' },
+  { name: 'L20', status: 'operational', availability: '96%', activeFailures: 1, color: 'text-green-600 dark:text-green-400' },
+  { name: 'L33', status: 'operational', availability: '95%', activeFailures: 1, color: 'text-green-600 dark:text-green-400' },
+];
+---
+
+<MainLayout title="Dashboard - Gestión de Averías" currentPath="/dashboard">
+  <!-- Page Header -->
+  <div class="mb-6">
+    <h1 class="text-3xl font-bold text-dark-900 dark:text-dark-50 mb-2">
+      Dashboard
+    </h1>
+    <p class="text-dark-600 dark:text-dark-400">
+      Resumen general del estado de las líneas de producción
+    </p>
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <KPICard
+      title="MTTR"
+      value={kpis.mttr.value}
+      subtitle={kpis.mttr.subtitle}
+      icon={<Clock className="w-6 h-6" />}
+      trend={kpis.mttr.trend}
+      trendValue={kpis.mttr.trendValue}
+      color="primary"
+      client:load
+    />
+    <KPICard
+      title="MTBF"
+      value={kpis.mtbf.value}
+      subtitle={kpis.mtbf.subtitle}
+      icon={<Activity className="w-6 h-6" />}
+      trend={kpis.mtbf.trend}
+      trendValue={kpis.mtbf.trendValue}
+      color="success"
+      client:load
+    />
+    <KPICard
+      title="Disponibilidad"
+      value={kpis.availability.value}
+      subtitle={kpis.availability.subtitle}
+      icon={<TrendingUp className="w-6 h-6" />}
+      trend={kpis.availability.trend}
+      trendValue={kpis.availability.trendValue}
+      color="info"
+      client:load
+    />
+    <KPICard
+      title="Averías Abiertas"
+      value={kpis.openFailures.value}
+      subtitle={kpis.openFailures.subtitle}
+      icon={<AlertCircle className="w-6 h-6" />}
+      trend={kpis.openFailures.trend}
+      trendValue={kpis.openFailures.trendValue}
+      color="warning"
+      client:load
+    />
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Recent Failures -->
+    <div class="lg:col-span-2">
+      <Card client:load>
+        <CardHeader title="Averías Recientes" subtitle="Últimas averías reportadas" client:load>
+          <Button variant="outline" size="sm" href="/failures" client:load>
+            Ver todas
+          </Button>
+        </CardHeader>
+        <CardBody client:load>
+          <div class="space-y-3">
+            {recentFailures.map((failure) => (
+              <div class="flex items-start justify-between p-3 rounded-lg bg-light-100 dark:bg-dark-800 hover:bg-light-200 dark:hover:bg-dark-700 transition-colors cursor-pointer">
+                <div class="flex-1">
+                  <div class="flex items-center gap-2 mb-1">
+                    <h4 class="font-medium text-dark-900 dark:text-dark-50">
+                      {failure.title}
+                    </h4>
+                    <FailureSeverityBadge severity={failure.severity} client:load />
+                  </div>
+                  <p class="text-sm text-dark-600 dark:text-dark-400 mb-2">
+                    {failure.machine} • {failure.line}
+                  </p>
+                  <div class="flex items-center gap-3 text-xs text-dark-500 dark:text-dark-500">
+                    <FailureStatusBadge status={failure.status} client:load />
+                    <span>{failure.time}</span>
+                  </div>
+                </div>
+                <Button variant="ghost" size="sm" client:load>
+                  Ver
+                </Button>
+              </div>
+            ))}
+          </div>
+        </CardBody>
+      </Card>
+    </div>
+
+    <!-- Production Lines Status -->
+    <div>
+      <Card client:load>
+        <CardHeader title="Estado de Líneas" subtitle="Líneas de producción" client:load />
+        <CardBody client:load>
+          <div class="space-y-4">
+            {lineStatus.map((line) => (
+              <div class="p-4 rounded-lg bg-light-100 dark:bg-dark-800">
+                <div class="flex items-center justify-between mb-2">
+                  <h4 class="text-lg font-semibold text-dark-900 dark:text-dark-50">
+                    {line.name}
+                  </h4>
+                  <span class={`flex items-center gap-1 text-sm font-medium ${line.color}`}>
+                    <span class="w-2 h-2 rounded-full bg-current"></span>
+                    {line.status === 'operational' ? 'Operativa' : 'Atención'}
+                  </span>
+                </div>
+                <div class="space-y-1">
+                  <div class="flex justify-between text-sm">
+                    <span class="text-dark-600 dark:text-dark-400">Disponibilidad</span>
+                    <span class="font-medium text-dark-900 dark:text-dark-50">{line.availability}</span>
+                  </div>
+                  <div class="flex justify-between text-sm">
+                    <span class="text-dark-600 dark:text-dark-400">Averías activas</span>
+                    <span class="font-medium text-dark-900 dark:text-dark-50">{line.activeFailures}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardBody>
+      </Card>
+
+      <!-- Quick Actions -->
+      <Card class="mt-4" client:load>
+        <CardHeader title="Acciones Rápidas" client:load />
+        <CardBody client:load>
+          <div class="space-y-2">
+            <Button variant="primary" fullWidth href="/failures/new" icon={<Wrench className="w-4 h-4" />} client:load>
+              Reportar Avería
+            </Button>
+            <Button variant="secondary" fullWidth href="/ai-assistant" icon={<Activity className="w-4 h-4" />} client:load>
+              Asistente IA
+            </Button>
+            <Button variant="outline" fullWidth href="/manuals" client:load>
+              Ver Manuales
+            </Button>
+          </div>
+        </CardBody>
+      </Card>
+    </div>
+  </div>
+</MainLayout>

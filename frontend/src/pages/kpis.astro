@@ -1,0 +1,215 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import KPICard from '@/components/KPICard';
+import Card, { CardHeader, CardBody } from '@/components/Card';
+import Select from '@/components/Select';
+import { TrendingUp, Clock, Activity, Zap, Target } from 'lucide-react';
+
+const periodOptions = [
+  { value: 'today', label: 'Hoy' },
+  { value: 'week', label: 'Esta Semana' },
+  { value: 'month', label: 'Este Mes' },
+  { value: 'quarter', label: 'Este Trimestre' },
+  { value: 'year', label: 'Este Año' },
+];
+
+const lineOptions = [
+  { value: 'all', label: 'Todas las Líneas' },
+  { value: 'L16', label: 'L16' },
+  { value: 'L20', label: 'L20' },
+  { value: 'L33', label: 'L33' },
+];
+---
+
+<MainLayout title="Visualización de KPIs - Gestión de Averías" currentPath="/kpis">
+  <div class="mb-6">
+    <h1 class="text-3xl font-bold text-dark-900 dark:text-dark-50 mb-2">
+      Visualización de KPIs
+    </h1>
+    <p class="text-dark-600 dark:text-dark-400">
+      Métricas y análisis de rendimiento de las líneas de producción
+    </p>
+  </div>
+
+  <!-- Filters -->
+  <div class="card p-4 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <Select label="Período" options={periodOptions} client:load />
+      <Select label="Línea" options={lineOptions} client:load />
+    </div>
+  </div>
+
+  <!-- Main KPIs -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <KPICard
+      title="MTTR"
+      value="2.3h"
+      subtitle="Mean Time To Repair"
+      icon={<Clock className="w-6 h-6" />}
+      trend="down"
+      trendValue="-15%"
+      color="primary"
+      client:load
+    />
+    <KPICard
+      title="MTBF"
+      value="45.2h"
+      subtitle="Mean Time Between Failures"
+      icon={<Activity className="w-6 h-6" />}
+      trend="up"
+      trendValue="+8%"
+      color="success"
+      client:load
+    />
+    <KPICard
+      title="Disponibilidad"
+      value="94.5%"
+      subtitle="System Availability"
+      icon={<TrendingUp className="w-6 h-6" />}
+      trend="up"
+      trendValue="+2.1%"
+      color="info"
+      client:load
+    />
+    <KPICard
+      title="Eficiencia"
+      value="87.3%"
+      subtitle="Overall Equipment Effectiveness"
+      icon={<Zap className="w-6 h-6" />}
+      trend="up"
+      trendValue="+3.5%"
+      color="success"
+      client:load
+    />
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+    <!-- Failures by Line -->
+    <Card client:load>
+      <CardHeader title="Averías por Línea" subtitle="Últimos 30 días" client:load />
+      <CardBody client:load>
+        <div class="space-y-4">
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-dark-700 dark:text-dark-300">L16</span>
+              <span class="font-medium text-dark-900 dark:text-dark-50">45 averías</span>
+            </div>
+            <div class="w-full bg-light-200 dark:bg-dark-800 rounded-full h-2">
+              <div class="bg-primary-600 h-2 rounded-full" style="width: 75%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-dark-700 dark:text-dark-300">L20</span>
+              <span class="font-medium text-dark-900 dark:text-dark-50">32 averías</span>
+            </div>
+            <div class="w-full bg-light-200 dark:bg-dark-800 rounded-full h-2">
+              <div class="bg-primary-600 h-2 rounded-full" style="width: 53%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-dark-700 dark:text-dark-300">L33</span>
+              <span class="font-medium text-dark-900 dark:text-dark-50">28 averías</span>
+            </div>
+            <div class="w-full bg-light-200 dark:bg-dark-800 rounded-full h-2">
+              <div class="bg-primary-600 h-2 rounded-full" style="width: 47%"></div>
+            </div>
+          </div>
+        </div>
+      </CardBody>
+    </Card>
+
+    <!-- Failures by Severity -->
+    <Card client:load>
+      <CardHeader title="Averías por Urgencia" subtitle="Últimos 30 días" client:load />
+      <CardBody client:load>
+        <div class="space-y-4">
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-dark-700 dark:text-dark-300">Crítica</span>
+              <span class="font-medium text-red-600 dark:text-red-400">12 (11%)</span>
+            </div>
+            <div class="w-full bg-light-200 dark:bg-dark-800 rounded-full h-2">
+              <div class="bg-red-600 h-2 rounded-full" style="width: 11%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-dark-700 dark:text-dark-300">Alta</span>
+              <span class="font-medium text-orange-600 dark:text-orange-400">28 (27%)</span>
+            </div>
+            <div class="w-full bg-light-200 dark:bg-dark-800 rounded-full h-2">
+              <div class="bg-orange-600 h-2 rounded-full" style="width: 27%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-dark-700 dark:text-dark-300">Media</span>
+              <span class="font-medium text-yellow-600 dark:text-yellow-400">45 (43%)</span>
+            </div>
+            <div class="w-full bg-light-200 dark:bg-dark-800 rounded-full h-2">
+              <div class="bg-yellow-600 h-2 rounded-full" style="width: 43%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-dark-700 dark:text-dark-300">Baja</span>
+              <span class="font-medium text-blue-600 dark:text-blue-400">20 (19%)</span>
+            </div>
+            <div class="w-full bg-light-200 dark:bg-dark-800 rounded-full h-2">
+              <div class="bg-blue-600 h-2 rounded-full" style="width: 19%"></div>
+            </div>
+          </div>
+        </div>
+      </CardBody>
+    </Card>
+  </div>
+
+  <!-- Line Performance -->
+  <Card client:load>
+    <CardHeader title="Rendimiento por Línea" subtitle="Comparativa de métricas clave" client:load />
+    <CardBody client:load>
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-light-100 dark:bg-dark-800">
+            <tr>
+              <th class="px-4 py-3 text-left text-sm font-medium text-dark-700 dark:text-dark-300">Línea</th>
+              <th class="px-4 py-3 text-left text-sm font-medium text-dark-700 dark:text-dark-300">MTTR</th>
+              <th class="px-4 py-3 text-left text-sm font-medium text-dark-700 dark:text-dark-300">MTBF</th>
+              <th class="px-4 py-3 text-left text-sm font-medium text-dark-700 dark:text-dark-300">Disponibilidad</th>
+              <th class="px-4 py-3 text-left text-sm font-medium text-dark-700 dark:text-dark-300">Eficiencia</th>
+              <th class="px-4 py-3 text-left text-sm font-medium text-dark-700 dark:text-dark-300">Averías</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-light-300 dark:divide-dark-800">
+            <tr>
+              <td class="px-4 py-3 font-medium text-dark-900 dark:text-dark-50">L16</td>
+              <td class="px-4 py-3 text-dark-600 dark:text-dark-400">2.5h</td>
+              <td class="px-4 py-3 text-dark-600 dark:text-dark-400">42.1h</td>
+              <td class="px-4 py-3 text-dark-600 dark:text-dark-400">91.2%</td>
+              <td class="px-4 py-3 text-dark-600 dark:text-dark-400">84.5%</td>
+              <td class="px-4 py-3 text-dark-600 dark:text-dark-400">45</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 font-medium text-dark-900 dark:text-dark-50">L20</td>
+              <td class="px-4 py-3 text-dark-600 dark:text-dark-400">2.1h</td>
+              <td class="px-4 py-3 text-dark-600 dark:text-dark-400">48.3h</td>
+              <td class="px-4 py-3 text-dark-600 dark:text-dark-400">96.1%</td>
+              <td class="px-4 py-3 text-dark-600 dark:text-dark-400">89.7%</td>
+              <td class="px-4 py-3 text-dark-600 dark:text-dark-400">32</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 font-medium text-dark-900 dark:text-dark-50">L33</td>
+              <td class="px-4 py-3 text-dark-600 dark:text-dark-400">2.3h</td>
+              <td class="px-4 py-3 text-dark-600 dark:text-dark-400">45.2h</td>
+              <td class="px-4 py-3 text-dark-600 dark:text-dark-400">95.3%</td>
+              <td class="px-4 py-3 text-dark-600 dark:text-dark-400">87.6%</td>
+              <td class="px-4 py-3 text-dark-600 dark:text-dark-400">28</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </CardBody>
+  </Card>
+</MainLayout>

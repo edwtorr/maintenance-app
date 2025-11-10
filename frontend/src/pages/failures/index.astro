@@ -1,0 +1,195 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import Button from '@/components/Button';
+import { FailureStatusBadge, FailureSeverityBadge } from '@/components/Badge';
+import { Plus, Filter, Download } from 'lucide-react';
+
+const failures = [
+  {
+    id: 1,
+    title: 'Fallo en motor principal',
+    machine: 'Máquina XZ-100',
+    line: 'L16',
+    status: 'open',
+    severity: 'critical',
+    reportedBy: 'Juan Pérez',
+    date: '2024-11-10 14:30',
+  },
+  {
+    id: 2,
+    title: 'Sensor de temperatura desajustado',
+    machine: 'Máquina AB-250',
+    line: 'L20',
+    status: 'in_progress',
+    severity: 'medium',
+    reportedBy: 'María García',
+    date: '2024-11-10 13:15',
+  },
+  {
+    id: 3,
+    title: 'Fuga hidráulica menor',
+    machine: 'Máquina CD-320',
+    line: 'L33',
+    status: 'in_progress',
+    severity: 'low',
+    reportedBy: 'Carlos López',
+    date: '2024-11-10 12:00',
+  },
+  {
+    id: 4,
+    title: 'Calibración necesaria',
+    machine: 'Máquina EF-450',
+    line: 'L16',
+    status: 'resolved',
+    severity: 'medium',
+    reportedBy: 'Ana Martínez',
+    date: '2024-11-10 11:20',
+  },
+  {
+    id: 5,
+    title: 'Ruido anormal en rodamientos',
+    machine: 'Máquina GH-560',
+    line: 'L20',
+    status: 'closed',
+    severity: 'high',
+    reportedBy: 'Pedro Sánchez',
+    date: '2024-11-09 16:45',
+  },
+];
+
+const stats = [
+  { label: 'Total', value: failures.length, color: 'text-dark-900 dark:text-dark-50' },
+  { label: 'Abiertas', value: failures.filter(f => f.status === 'open').length, color: 'text-red-600 dark:text-red-400' },
+  { label: 'En Progreso', value: failures.filter(f => f.status === 'in_progress').length, color: 'text-yellow-600 dark:text-yellow-400' },
+  { label: 'Resueltas', value: failures.filter(f => f.status === 'resolved').length, color: 'text-green-600 dark:text-green-400' },
+];
+---
+
+<MainLayout title="Registro de Averías - Gestión de Averías" currentPath="/failures">
+  <div class="mb-6">
+    <div class="flex items-center justify-between mb-4">
+      <div>
+        <h1 class="text-3xl font-bold text-dark-900 dark:text-dark-50 mb-2">
+          Registro de Averías
+        </h1>
+        <p class="text-dark-600 dark:text-dark-400">
+          Gestiona y da seguimiento a todas las averías reportadas
+        </p>
+      </div>
+      <Button variant="primary" href="/failures/new" icon={<Plus class="w-4 h-4" />} client:load>
+        Nueva Avería
+      </Button>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      {stats.map((stat) => (
+        <div class="p-4 rounded-lg bg-white dark:bg-dark-900 border border-light-300 dark:border-dark-800">
+          <p class="text-sm text-dark-600 dark:text-dark-400 mb-1">{stat.label}</p>
+          <p class={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="card p-4 mb-4">
+    <div class="flex flex-wrap gap-3">
+      <input
+        type="search"
+        placeholder="Buscar averías..."
+        class="flex-1 min-w-[200px] px-4 py-2 rounded-lg bg-light-100 dark:bg-dark-800 border border-transparent focus:border-primary-500 outline-none transition-colors"
+      />
+      <Button variant="outline" icon={<Filter class="w-4 h-4" />} client:load>
+        Filtros
+      </Button>
+      <Button variant="outline" icon={<Download class="w-4 h-4" />} client:load>
+        Exportar
+      </Button>
+    </div>
+  </div>
+
+  <!-- Failures Table -->
+  <div class="card overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead class="bg-light-100 dark:bg-dark-800">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-dark-700 dark:text-dark-300 uppercase tracking-wider">
+              ID
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-dark-700 dark:text-dark-300 uppercase tracking-wider">
+              Título
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-dark-700 dark:text-dark-300 uppercase tracking-wider">
+              Ubicación
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-dark-700 dark:text-dark-300 uppercase tracking-wider">
+              Estado
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-dark-700 dark:text-dark-300 uppercase tracking-wider">
+              Urgencia
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-dark-700 dark:text-dark-300 uppercase tracking-wider">
+              Reportado Por
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-dark-700 dark:text-dark-300 uppercase tracking-wider">
+              Fecha
+            </th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-dark-700 dark:text-dark-300 uppercase tracking-wider">
+              Acciones
+            </th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-light-300 dark:divide-dark-800">
+          {failures.map((failure) => (
+            <tr class="hover:bg-light-100 dark:hover:bg-dark-800 transition-colors">
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-dark-900 dark:text-dark-50">
+                #{failure.id}
+              </td>
+              <td class="px-6 py-4 text-sm text-dark-900 dark:text-dark-50">
+                {failure.title}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-dark-600 dark:text-dark-400">
+                <div>{failure.machine}</div>
+                <div class="text-xs text-dark-500 dark:text-dark-500">{failure.line}</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <FailureStatusBadge status={failure.status} client:load />
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <FailureSeverityBadge severity={failure.severity} client:load />
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-dark-600 dark:text-dark-400">
+                {failure.reportedBy}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-dark-600 dark:text-dark-400">
+                {failure.date}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <Button variant="ghost" size="sm" href={`/failures/${failure.id}`} client:load>
+                  Ver
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="px-6 py-4 border-t border-light-300 dark:border-dark-800 flex items-center justify-between">
+      <p class="text-sm text-dark-600 dark:text-dark-400">
+        Mostrando <span class="font-medium">1-{failures.length}</span> de <span class="font-medium">{failures.length}</span> resultados
+      </p>
+      <div class="flex gap-2">
+        <Button variant="outline" size="sm" disabled client:load>
+          Anterior
+        </Button>
+        <Button variant="outline" size="sm" disabled client:load>
+          Siguiente
+        </Button>
+      </div>
+    </div>
+  </div>
+</MainLayout>
