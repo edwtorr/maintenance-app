@@ -1,12 +1,11 @@
 from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import Optional
-from uuid import UUID
 
 # Base Schema
 class KPIBase(BaseModel):
-    production_line_id: Optional[UUID] = None
-    machine_id: Optional[UUID] = None
+    production_line_id: Optional[int] = None
+    machine_id: Optional[int] = None
     period_start: datetime
     period_end: datetime
     mttr: Optional[float] = Field(None, description="Mean Time To Repair (horas)")
@@ -21,7 +20,7 @@ class KPICreate(KPIBase):
 
 # Schema de respuesta
 class KPI(KPIBase):
-    id: UUID
+    id: int
     calculated_at: datetime
 
     class Config:
@@ -46,7 +45,7 @@ class DashboardKPIs(BaseModel):
 
 # Schema para filtros de KPI
 class KPIFilter(BaseModel):
-    production_line_id: Optional[UUID] = None
-    machine_id: Optional[UUID] = None
+    production_line_id: Optional[int] = None
+    machine_id: Optional[int] = None
     period_start: Optional[datetime] = None
     period_end: Optional[datetime] = None

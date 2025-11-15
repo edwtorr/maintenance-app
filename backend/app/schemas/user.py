@@ -1,7 +1,6 @@
 from pydantic import BaseModel, EmailStr, Field
 from datetime import datetime
 from typing import Optional
-from uuid import UUID
 
 # Enums
 class UserRole(str):
@@ -38,7 +37,7 @@ class UserUpdate(BaseModel):
 
 # Schema de respuesta (sin password)
 class User(UserBase):
-    id: UUID
+    id: int
     role: str
     subscription_tier: str
     subscription_expires_at: Optional[datetime] = None

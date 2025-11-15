@@ -1,11 +1,10 @@
 from pydantic import BaseModel, Field
 from datetime import datetime, date
 from typing import Optional, Dict, Any
-from uuid import UUID
 
 # Base Schema
 class MachineBase(BaseModel):
-    production_line_id: UUID
+    production_line_id: int
     code: str = Field(..., min_length=1, max_length=50)
     name: str = Field(..., min_length=1, max_length=255)
     machine_type: str = Field(..., description="Tipo: etiquetadora, encajadora, llenadora, etc.")
@@ -20,7 +19,7 @@ class MachineCreate(MachineBase):
 
 # Schema para actualizar máquina
 class MachineUpdate(BaseModel):
-    production_line_id: Optional[UUID] = None
+    production_line_id: Optional[int] = None
     code: Optional[str] = Field(None, min_length=1, max_length=50)
     name: Optional[str] = Field(None, min_length=1, max_length=255)
     machine_type: Optional[str] = None
@@ -32,7 +31,7 @@ class MachineUpdate(BaseModel):
 
 # Schema de respuesta
 class Machine(MachineBase):
-    id: UUID
+    id: int
     is_active: bool
     created_at: datetime
 

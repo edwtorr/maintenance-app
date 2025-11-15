@@ -1,13 +1,12 @@
 from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import Optional, List
-from uuid import UUID
 
 # Base Schema
 class ManualBase(BaseModel):
     title: str = Field(..., min_length=1, max_length=255)
-    machine_id: Optional[UUID] = None
-    production_line_id: Optional[UUID] = None
+    machine_id: Optional[int] = None
+    production_line_id: Optional[int] = None
     file_type: str = Field(..., description="Tipo de archivo: pdf, doc, etc.")
     version: Optional[str] = None
     tags: Optional[List[str]] = Field(default_factory=list)
@@ -19,16 +18,16 @@ class ManualCreate(ManualBase):
 # Schema para actualizar manual
 class ManualUpdate(BaseModel):
     title: Optional[str] = Field(None, min_length=1, max_length=255)
-    machine_id: Optional[UUID] = None
-    production_line_id: Optional[UUID] = None
+    machine_id: Optional[int] = None
+    production_line_id: Optional[int] = None
     version: Optional[str] = None
     tags: Optional[List[str]] = None
 
 # Schema de respuesta
 class Manual(ManualBase):
-    id: UUID
+    id: int
     file_path: str
-    uploaded_by: UUID
+    uploaded_by: int
     uploaded_at: datetime
 
     class Config:
@@ -45,8 +44,8 @@ class ManualWithDetails(Manual):
 # Schema para búsqueda
 class ManualSearchFilter(BaseModel):
     search: Optional[str] = None
-    machine_id: Optional[UUID] = None
-    production_line_id: Optional[UUID] = None
+    machine_id: Optional[int] = None
+    production_line_id: Optional[int] = None
     file_type: Optional[str] = None
     tags: Optional[List[str]] = None
     skip: int = Field(default=0, ge=0)

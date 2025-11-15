@@ -34,7 +34,9 @@ async def health_check():
     return {"status": "healthy"}
 
 # Importar y registrar routers
-from app.api import auth, production_lines
+from app.api import auth, production_lines, machines, failures
 
 app.include_router(auth.router, prefix=settings.API_V1_STR)
 app.include_router(production_lines.router, prefix=settings.API_V1_STR)
+app.include_router(machines.router, prefix=f"{settings.API_V1_STR}/machines", tags=["machines"])
+app.include_router(failures.router, prefix=f"{settings.API_V1_STR}/failures", tags=["failures"])

@@ -1,7 +1,6 @@
 from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import Optional, List
-from uuid import UUID
 
 # Enums
 class FailureSeverity(str):
@@ -18,7 +17,7 @@ class FailureStatus(str):
 
 # Base Schema
 class FailureBase(BaseModel):
-    machine_id: UUID
+    machine_id: int
     title: str = Field(..., min_length=1, max_length=255)
     description: str
     severity: str = Field(default=FailureSeverity.MEDIUM)
@@ -39,8 +38,8 @@ class FailureUpdate(BaseModel):
 
 # Schema de respuesta
 class Failure(FailureBase):
-    id: UUID
-    reported_by: UUID
+    id: int
+    reported_by: int
     status: str
     reported_at: datetime
     resolved_at: Optional[datetime] = None
@@ -60,8 +59,8 @@ class FailureWithDetails(Failure):
 
 # Schema para lista con filtros
 class FailureListFilter(BaseModel):
-    production_line_id: Optional[UUID] = None
-    machine_id: Optional[UUID] = None
+    production_line_id: Optional[int] = None
+    machine_id: Optional[int] = None
     status: Optional[str] = None
     severity: Optional[str] = None
     reported_after: Optional[datetime] = None

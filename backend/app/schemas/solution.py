@@ -1,11 +1,10 @@
 from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import Optional, List, Dict, Any
-from uuid import UUID
 
 # Base Schema
 class SolutionBase(BaseModel):
-    failure_id: UUID
+    failure_id: int
     description: str
     steps_taken: Optional[Dict[str, Any]] = Field(default_factory=dict)
     parts_replaced: Optional[List[str]] = Field(default_factory=list)
@@ -24,8 +23,8 @@ class SolutionUpdate(BaseModel):
 
 # Schema de respuesta
 class Solution(SolutionBase):
-    id: UUID
-    solved_by: UUID
+    id: int
+    solved_by: int
     created_at: datetime
 
     class Config:

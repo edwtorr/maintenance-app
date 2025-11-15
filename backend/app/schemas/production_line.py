@@ -1,7 +1,6 @@
 from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import Optional
-from uuid import UUID
 
 # Base Schema
 class ProductionLineBase(BaseModel):
@@ -22,7 +21,7 @@ class ProductionLineUpdate(BaseModel):
 
 # Schema de respuesta
 class ProductionLine(ProductionLineBase):
-    id: UUID
+    id: int
     is_active: bool
     created_at: datetime
 
