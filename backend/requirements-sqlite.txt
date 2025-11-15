@@ -1,0 +1,21 @@
+# FastAPI y servidor (usando versiones más recientes con wheels)
+fastapi
+uvicorn[standard]
+python-multipart
+
+# Base de datos (SQLite - viene con Python, SQLAlchemy para ORM)
+sqlalchemy
+alembic
+
+# Autenticación y seguridad
+python-jose[cryptography]
+passlib[bcrypt]
+bcrypt
+pydantic[email]
+pydantic-settings
+
+# Utilidades
+python-dotenv
+
+# API de Anthropic Claude
+anthropic
