@@ -23,10 +23,6 @@
     --color-border: 62 63 74;
   }
 
-  * {
-    @apply border-border;
-  }
-
   body {
     @apply bg-white dark:bg-dark-950 text-dark-900 dark:text-dark-50;
     @apply transition-colors duration-200;

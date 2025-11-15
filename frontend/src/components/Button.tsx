@@ -12,6 +12,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
   icon?: ReactNode;
   iconPosition?: 'left' | 'right';
+  href?: string;
 }
 
 export default function Button({
@@ -24,6 +25,7 @@ export default function Button({
   iconPosition = 'left',
   className,
   disabled,
+  href,
   ...props
 }: ButtonProps) {
   const baseClasses = 'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
@@ -42,18 +44,16 @@ export default function Button({
     lg: 'px-6 py-3 text-lg gap-2.5',
   };
 
-  return (
-    <button
-      className={clsx(
-        baseClasses,
-        variantClasses[variant],
-        sizeClasses[size],
-        fullWidth && 'w-full',
-        className
-      )}
-      disabled={disabled || loading}
-      {...props}
-    >
+  const classes = clsx(
+    baseClasses,
+    variantClasses[variant],
+    sizeClasses[size],
+    fullWidth && 'w-full',
+    className
+  );
+
+  const content = (
+    <>
       {loading && (
         <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -63,6 +63,24 @@ export default function Button({
       {icon && iconPosition === 'left' && !loading && icon}
       {children}
       {icon && iconPosition === 'right' && !loading && icon}
+    </>
+  );
+
+  if (href) {
+    return (
+      <a href={href} className={classes}>
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <button
+      className={classes}
+      disabled={disabled || loading}
+      {...props}
+    >
+      {content}
     </button>
   );
 }
